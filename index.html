@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Webmap 201</title>
+        <link rel="stylesheet" href="src/leaflet.css">
+        <link rel="stylesheet" href="src/css/bootstrap.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.Pan.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.Zoomslider.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.MousePosition.css">
+		<link rel="stylesheet" href="src/plugins/L.Control.Sidebar.css">
+        <link rel="stylesheet" href="src/plugins/Leaflet.PolylineMeasure.css">
+        <link rel="stylesheet" href="src/plugins/easy-button.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-opencage/src/css/L.Control.OpenCageSearch.css">
+		<link rel="stylesheet" href="src/plugins/leaflet-styleeditor/css/Leaflet.StyleEditor.css">
+        <script src="src/leaflet-src.js"></script>
+        <script src="src/jquery-3.4.1.min.js"></script>
+        <script src="src/plugins/L.Control.Pan.js"></script>
+        <script src="src/plugins/L.Control.Zoomslider.js"></script>
+        <script src="src/plugins/L.Control.MousePosition.js"></script>
+		<script src="src/plugins/L.Control.Sidebar.js"></script>														
+        <script src="src/plugins/Leaflet.PolylineMeasure.js"></script>
+        <script src="src/plugins/easy-button.js"></script>
+        <script src="src/plugins/leaflet-providers.js"></script>
+        <script src="src/plugins/leaflet-opencage/src/js/L.Control.OpenCageSearch.js"></script>
+        <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
+        <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleForms.js"></script>
+        
+<!--    ***************  Begin Leaflet.Draw-->
+        
+        <script src="src/plugins/leaflet-draw/Leaflet.draw.js"></script>
+        <script src="src/plugins/leaflet-draw/Leaflet.Draw.Event.js"></script>
+        <link rel="stylesheet" href="src/plugins/leaflet-draw/leaflet.draw.css"/>
+
+        <script src="src/plugins/leaflet-draw/Toolbar.js"></script>
+        <script src="src/plugins/leaflet-draw/Tooltip.js"></script>
+
+        <script src="src/plugins/leaflet-draw/ext/GeometryUtil.js"></script>
+        <script src="src/plugins/leaflet-draw/ext/LatLngUtil.js"></script>
+        <script src="src/plugins/leaflet-draw/ext/LineUtil.Intersect.js"></script>
+        <script src="src/plugins/leaflet-draw/ext/Polygon.Intersect.js"></script>
+        <script src="src/plugins/leaflet-draw/ext/Polyline.Intersect.js"></script>
+        <script src="src/plugins/leaflet-draw/ext/TouchEvents.js"></script>
+
+        <script src="src/plugins/leaflet-draw/draw/DrawToolbar.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Feature.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.SimpleShape.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Polyline.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Circle.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Marker.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Polygon.js"></script>
+        <script src="src/plugins/leaflet-draw/draw/handler/Draw.Rectangle.js"></script>
+
+
+        <script src="src/plugins/leaflet-draw/edit/EditToolbar.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/EditToolbar.Edit.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/EditToolbar.Delete.js"></script>
+
+        <script src="src/plugins/leaflet-draw/Control.Draw.js"></script>
+
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Poly.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.SimpleShape.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Circle.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Rectangle.js"></script>
+        <script src="src/plugins/leaflet-draw/edit/handler/Edit.Marker.js"></script>
+        
+<!--    **************  End of Lealet Draw-->
+
+        <style>
+            #mapdiv {
+                height:100vh;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="side-bar" class="col-md-7">	  																				 
+            <button id='btnLocate' class='btn btn-primary btn-block'>LOCATE</button>
+                    <button id='btnZocalo' class='btn btn-primary btn-block'>ZOOM TO QPS</button>
+                    <button id='btnTTT' class='btn btn-primary btn-block'>ZOOM TO TTT</button>
+                    <button id='btnBikeRoute' class='btn btn-primary btn-block'>Zoom To Bike  Route</button> 
+                    <button id='btnAddTTT' class='btn btn-primary btn-block'>Add TTT to Vector Group</button>
+                    <button id='btnColour' class='btn btn-primary btn-block'>Change Colour</button>
+					<br/>
+					<h6>ZOOM LEVEL: <span id='zoom-level'></span></h6>
+                    <h6>CENTRE: <span id='map-center'></span></h6>
+                    <h6>MOUSE LOCATION: <span id='mouse-location'></span></h6>
+                    <h6>IMAGE OPACTIY: <span id='image-opacity'>0.75</span></h6>
+                    <input type='range' id='sld-opacity' min='0' max='1' step='0.1' value='0.75'>
+        </div>
+        <div id="mapdiv" class="col-md-12"></div>
+        <script>
+            var mymap;
+            var lyrOSM;
+            var lyrWatercolor;
+            var lyrTopo;
+            var lyrImagery;
+            var lyrOutdoors;
+            var lyrDiego;
+            var mrkCurrentLocation;
+            var mrkTTT;
+            var plnBikeRoute;
+            var plyParks;
+            var fgpDiego;
+            var fgpDrawnItems;
+            var popZocalo;
+            var ctlAttribute;
+            var ctlScale;
+            var ctlPan;
+            var ctlZoomslider;
+            var ctlMouseposition;
+            var ctlMeasure;
+            var ctlEasybutton;
+            var ctlSidebar;
+            var ctlSearch;
+            var ctlLayers;
+            var ctlDraw;
+            var ctlStyle;
+			var objBasemaps;
+            var objOverlays;
+            
+            $(document).ready(function(){
+                mymap = L.map('mapdiv', {center:[10.7102, -61.5546], zoom:13, zoomControl:false, attributionControl:false});
+                lyrOSM = L.tileLayer.provider('OpenStreetMap.Mapnik');
+                lyrTopo = L.tileLayer.provider('OpenTopoMap');
+                lyrImagery = L.tileLayer.provider('Esri.WorldImagery');
+                lyrOutdoors = L.tileLayer.provider('Thunderforest.Outdoors');
+                lyrWatercolor = L.tileLayer.provider('Stamen.Watercolor');
+                mymap.addLayer(lyrOSM);
+                
+                lyrDiego = L.imageOverlay('img/diego.png',[[10.70445, -61.55688],[10.69946,-61.54912]], {opacity:0.75}).addTo(mymap);
+                
+                objBasemaps = {
+                    "Open Street Maps": lyrOSM,
+                    "Topo Map":lyrTopo,
+                    "Imagery":lyrImagery,
+                    "Outdoors":lyrOutdoors,
+                    "Watercolor":lyrWatercolor
+                };
+                
+                mrkTTT = L.marker([10.66569, -61.51936], {draggable: true});
+                mrkTTT.bindTooltip("Trinidad & Tobago Television");
+                
+                plnBikeRoute = L.polyline([[10.66583, -61.5191],[10.66567, -61.51645],[10.66673, -61.51642]], {color:'red'});
+                
+                plyParks = L.polygon([[10.6861, -61.5591], [10.68591, -61.55798],[10.68485, -61.55807], [10.68493, -61.55927]], {color:'blue',fillColor:'yellow', fillOpacity:0.5});
+                
+                fgpDiego = L.featureGroup([plnBikeRoute, plyParks]).addTo(mymap);
+                fgpDrawnItems = new L.FeatureGroup();
+                fgpDrawnItems.addTo(mymap);
+                
+                objOverlays = {
+                    "Dickson Drive":lyrDiego,
+                    "Diego Vectors":fgpDiego
+                    
+                };
+                
+                ctlLayers = L.control.layers(objBasemaps, objOverlays).addTo(mymap);
+                
+                ctlPan = L.control.pan().addTo(mymap);
+                ctlZoomslider = L.control.zoomslider({position:'topright'}).addTo(mymap);
+                
+                ctlMeasure = L.control.polylineMeasure().addTo(mymap);
+                ctlSidebar = L.control.sidebar('side-bar').addTo(mymap);
+                
+                ctlEasybutton = L.easyButton('glyphicon-transfer', function(){
+                   ctlSidebar.toggle(); 
+                }).addTo(mymap);
+                
+                ctlSearch = L.Control.openCageSearch({key: '3c38d15e76c02545181b07d3f8cfccf0',limit: 10}).addTo(mymap);
+                
+                ctlAttribute = L.control.attribution({position:'bottomleft'}).addTo(mymap);
+                ctlAttribute.addAttribution('OSM');
+                ctlAttribute.addAttribution('&copy;<a href="https://google.com"> Google</a>');
+                
+                ctlScale = L.control.scale({position:'bottomleft', metric:false, maxWidth:200}).addTo(mymap);
+                ctlMouseposition = L.control.mousePosition().addTo(mymap);
+                
+                ctlStyle = L.control.styleEditor({position:'topright'}).addTo(mymap);
+                
+                ctlDraw = new L.Control.Draw({
+                    draw:{
+                        circle:false
+                    },
+                    edit:{
+                        featureGroup:fgpDrawnItems
+                    }
+                });
+                ctlDraw.addTo(mymap);
+                
+                mymap.on('draw:created', function(e){
+                    console.log(e);
+                    fgpDrawnItems.addLayer(e.layer);
+                    alert(JSON.stringify(e.layer.toGeoJSON()));
+                });
+                
+                popZocalo = L.popup({maxWidth:200,keepInView:true});
+                popZocalo.setLatLng([10.665321, -61.512707]);
+                popZocalo.setContent("<h2>Grand Stand</h2><img src='img/grand_stand.jpg' width=200px>");
+                
+                mymap.on('contextmenu', function(e) {
+                    var dtCurrentTime = new Date();
+                    L.marker(e.latlng).addTo(mymap).bindPopup(e.latlng.toString()+"<br>"+dtCurrentTime.toString());
+                });
+                
+                mymap.on('keypress', function(e) {
+										
+                    if (e.originalEvent.key=="l") {
+                        mymap.locate();
+                    }
+                });
+                
+                mymap.on('locationfound', function(e) {
+                    console.log(e);
+                    if (mrkCurrentLocation) {
+                        mrkCurrentLocation.remove();
+                    }
+                    mrkCurrentLocation = L.circle(e.latlng, {radius:e.accuracy/2}).addTo(mymap);
+                    mymap.setView(e.latlng, 14);
+                });
+                
+                mymap.on('locationerror', function(e) {
+                    console.log(e);
+                    alert("Location was not found");
+                })
+                
+                mymap.on('zoomend', function(){
+                    $("#zoom-level").html(mymap.getZoom());
+                });
+                
+                mymap.on('moveend', function(){
+                    $("#map-center").html(LatLngToArrayString(mymap.getCenter()));
+                });
+                
+                mymap.on('mousemove', function(e){
+                    $("#mouse-location").html(LatLngToArrayString(e.latlng));
+                });
+                
+                mrkTTT.on('dragend',function(){
+                    mrkTTT.setTooltipContent("Current Location: "+mrkTTT.getLatLng().toString()+"<br>"+"Distance to TTT: "+mrkTTT.getLatLng().distanceTo([10.66569, -61.51936]).toFixed(0));
+                })
+                
+                $("#btnLocate").click(function(){
+                    mymap.locate();
+                });
+            });   
+                $("#btnZocalo").click(function(){
+                    mymap.setView([10.665321, -61.512707], 17);
+                    mymap.openPopup(popZocalo);
+                });
+                
+                $("#btnTTT").click(function(){
+                    mymap.setView([10.66569, -61.51936], 20);
+                    mrkTTT.setLatLng([10.66569, -61.51936]);
+                    mrkTTT.setTooltipContent("TTT");
+                })
+                
+                $("#btnBikeRoute").click(function(){
+                    mymap.fitBounds(plnBikeRoute.getBounds());
+                })
+                
+                $("#sld-opacity").on('change', function(){
+                    $("#image-opacity").html(this.value);
+                    lyrDiego.setOpacity(this.value);
+                });
+                
+                $("#btnColour").click(function(){
+                    fgpDiego.setStyle({color:'purple', fillColor:'green', fillOpacity:0.8});
+                });
+                
+                $("#btnAddMuseo").click(function(){
+                    if (fgpChapultepec.hasLayer(mrkMuseo)) {
+                        fgpChapultepec.removeLayer(mrkMuseo);
+                        $("#btnAddMuseo").html("Add Museo To Chapultepec Vectors");
+                    } else {
+                        fgpChapultepec.addLayer(mrkMuseo);
+                        $("#btnAddMuseo").html("Remove Museo From Chapultepec Vectors");
+                    }
+                
+            });
+            
+            $("#btnAddTTT").click(function(){
+                    if(fgpDiego.hasLayer(mrkTTT)){
+                        fgpDiego.removeLayer(mrkTTT);   
+                    $("#btnAddTTT").html("Add TTT to Diego Vectors");
+                    }
+                    else{
+                        fgpDiego.addLayer(mrkTTT);   
+                    $("#btnAddTTT").html("Remove TTT from Diego Vectors");
+                    }              
+                });
+				
+			function LatLngToArrayString(ll) {
+//                console.log(ll);
+                return "["+ll.lat.toFixed(5)+", "+ll.lng.toFixed(5)+"]";																		  
+            }		 
+        </script>
+    </body>
+</html>
