@@ -18,7 +18,7 @@
         <script src="src/plugins/L.Control.Pan.js"></script>
         <script src="src/plugins/L.Control.Zoomslider.js"></script>
         <script src="src/plugins/L.Control.MousePosition.js"></script>
-		<script src="src/plugins/L.Control.Sidebar.js"></script>														
+		<script src="src/plugins/L.Control.Sidebar.js"></script>	<script src="src/plugins/leaflet.ajax.min.js"></script>	
         <script src="src/plugins/Leaflet.PolylineMeasure.js"></script>
         <script src="src/plugins/easy-button.js"></script>
         <script src="src/plugins/leaflet-providers.js"></script>
@@ -75,8 +75,8 @@
     <body>
         <div id="side-bar" class="col-md-7">	  																				 
             <button id='btnLocate' class='btn btn-primary btn-block'>LOCATE</button>
-                    <!--<button id='btnZocalo' class='btn btn-primary btn-block'>ZOOM TO QPS</button>
-                    <button id='btnTTT' class='btn btn-primary btn-block'>ZOOM TO TTT</button>-->
+                    <button id='btnZocalo' class='btn btn-primary btn-block'>ZOOM TO QPS</button>
+                    <button id='btnTTT' class='btn btn-primary btn-block'>ZOOM TO TTT</button>
                     <button id='btnBikeRoute' class='btn btn-primary btn-block'>Zoom To Bike  Route</button> 
                     <button id='btnAddTTT' class='btn btn-primary btn-block'>Add TTT to Vector Group</button>
                     <button id='btnColour' class='btn btn-primary btn-block'>Change Colour</button>
@@ -95,6 +95,8 @@
             var lyrTopo;
             var lyrImagery;
             var lyrOutdoors;
+            var lyrSales;
+            var lyrCommunities;
             var lyrDiego;
             var mrkCurrentLocation;
             var mrkTTT;
@@ -137,7 +139,7 @@
                     "Watercolor":lyrWatercolor
                 };
                 
-                mrkTTT = L.marker([10.66569, -61.51936], {draggable: false});
+                mrkTTT = L.marker([10.66569, -61.51936], {draggable: true});
                 mrkTTT.bindTooltip("Trinidad & Tobago Television");
                 
                 plnBikeRoute = L.polyline([[10.66583, -61.5191],[10.66567, -61.51645],[10.66673, -61.51642]], {color:'red'});
@@ -148,10 +150,15 @@
                 fgpDrawnItems = new L.FeatureGroup();
                 fgpDrawnItems.addTo(mymap);
                 
+                lyrSales = L.geoJSON.ajax('src/sales.geojson').addTo(mymap);
+                L.geoJSON.ajax)'src/communities.geojson').addTo(mymap);
+                
+                
                 objOverlays = {
                     "Dickson Drive":lyrDiego,
-                    "Diego Vectors":fgpDiego
-                    
+                    "Sales":lyrSales,
+                    "Communities":lyrCommunities,
+                    "Diego Vectors":fgpDiego    
                 };
                 
                 ctlLayers = L.control.layers(objBasemaps, objOverlays).addTo(mymap);
