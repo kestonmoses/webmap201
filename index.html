@@ -18,7 +18,8 @@
         <script src="src/plugins/L.Control.Pan.js"></script>
         <script src="src/plugins/L.Control.Zoomslider.js"></script>
         <script src="src/plugins/L.Control.MousePosition.js"></script>
-		<script src="src/plugins/L.Control.Sidebar.js"></script>	<script src="src/plugins/leaflet.ajax.min.js"></script>	
+		<script src="src/plugins/L.Control.Sidebar.js"></script>
+       	<script src="src/plugins/leaflet.ajax.min.js"></script>	
         <script src="src/plugins/Leaflet.PolylineMeasure.js"></script>
         <script src="src/plugins/easy-button.js"></script>
         <script src="src/plugins/leaflet-providers.js"></script>
@@ -64,6 +65,16 @@
         <script src="src/plugins/leaflet-draw/edit/handler/Edit.Rectangle.js"></script>
         <script src="src/plugins/leaflet-draw/edit/handler/Edit.Marker.js"></script>
         
+        
+        <script src="https:api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.css">
+        
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" href="https://js.arcgis.com/3.31/esri/css/esri.css">
+        <script src="https://js.arcgis.com/3.31/"></script>
 <!--    **************  End of Lealet Draw-->
 
         <style>
@@ -74,17 +85,17 @@
     </head>
     <body>
         <div id="side-bar" class="col-md-7">	  																				 
-            <button id='btnLocate' class='btn btn-primary btn-block'>LOCATE</button>
-                    <button id='btnZocalo' class='btn btn-primary btn-block'>ZOOM TO QPS</button>
-                    <button id='btnTTT' class='btn btn-primary btn-block'>ZOOM TO TTT</button>
-                    <button id='btnBikeRoute' class='btn btn-primary btn-block'>Zoom To Bike  Route</button> 
+            <button id='btnLocate' class='btn btn-primary btn-block'>Locate</button>
+                    <button id='btnZocalo' class='btn btn-primary btn-block'>Zoom to QPS</button>
+                    <button id='btnTTT' class='btn btn-primary btn-block'>Zoom to TTT</button>
+                    <button id='btnBikeRoute' class='btn btn-primary btn-block'>Zoom To Bike Route</button> 
                     <button id='btnAddTTT' class='btn btn-primary btn-block'>Add TTT to Vector Group</button>
                     <button id='btnColour' class='btn btn-primary btn-block'>Change Colour</button>
 					<br/>
-					<h6>ZOOM LEVEL: <span id='zoom-level'></span></h6>
-                    <h6>CENTRE: <span id='map-center'></span></h6>
-                    <h6>MOUSE LOCATION: <span id='mouse-location'></span></h6>
-                    <h6>IMAGE OPACTIY: <span id='image-opacity'>0.75</span></h6>
+					<h6>Zoom Level: <span id='zoom-level'></span></h6>
+                    <h6>Centre: <span id='map-center'></span></h6>
+                    <h6>Mouse Location: <span id='mouse-location'></span></h6>
+                    <h6>Image Opacity: <span id='image-opacity'>0.75</span></h6>
                     <input type='range' id='sld-opacity' min='0' max='1' step='0.1' value='0.75'>
         </div>
         <div id="mapdiv" class="col-md-12"></div>
@@ -150,8 +161,8 @@
                 fgpDrawnItems = new L.FeatureGroup();
                 fgpDrawnItems.addTo(mymap);
                 
-                lyrSales = L.geoJSON.ajax('src/sales.geojson').addTo(mymap);
-                lyrCommunities = L.geoJSON.ajax)'src/communities.geojson').addTo(mymap);
+                lyrSales = L.geoJSON.ajax('src/Sales.geojson').addTo(mymap);
+                lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
                 
                 
                 objOverlays = {
