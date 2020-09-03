@@ -162,7 +162,12 @@
                 fgpDrawnItems.addTo(mymap);
                 
                 lyrSales = L.geoJSON.ajax('src/Sales.geojson').addTo(mymap);
-                lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
+                lyrSales.on(data:loaded, function(){
+                    mymap.fitBounds(lyrSales.getBounds());
+                });
+                
+                
+                /*lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);*/
                 
                 
                 objOverlays = {
