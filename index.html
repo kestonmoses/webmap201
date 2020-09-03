@@ -161,11 +161,13 @@
                 fgpDrawnItems = new L.FeatureGroup();
                 fgpDrawnItems.addTo(mymap);
                 
-                lyrSales = L.geoJSON.ajax('src/Sales.geojson').addTo(mymap);
-                lyrSales.on(data:loaded, function(){
-                    mymap.fitBounds(lyrSales.getBounds());
+                fetch("src/Sales.geojson")
+                        .then(function(response) {
+                return response.json();
+                                        })
+                        .then(function(data) {
+                            L.geoJSON(data).addTo(map);
                 });
-                
                 
                 /*lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);*/
                 
