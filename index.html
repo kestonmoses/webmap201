@@ -132,6 +132,8 @@
             var objOverlays;
             
             $(document).ready(function(){
+                lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
+                
                 mymap = L.map('mapdiv', {center:[10.7102, -61.5546], zoom:13, zoomControl:false, attributionControl:false});
                 lyrOSM = L.tileLayer.provider('OpenStreetMap.Mapnik');
                 lyrTopo = L.tileLayer.provider('OpenTopoMap');
@@ -161,15 +163,7 @@
                 fgpDrawnItems = new L.FeatureGroup();
                 fgpDrawnItems.addTo(mymap);
                 
-                /*fetch("src/Sales.geojson")
-                        .then(function(response) {
-                return response.json();
-                                        })
-                        .then(function(data) {
-                            L.geoJSON(data).addTo(mymap);
-                });
-                
-                lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);*/
+                lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
                 
                 
                 objOverlays = {
