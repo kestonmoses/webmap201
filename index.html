@@ -19,13 +19,13 @@
         <script src="src/plugins/L.Control.Zoomslider.js"></script>
         <script src="src/plugins/L.Control.MousePosition.js"></script>
 		<script src="src/plugins/L.Control.Sidebar.js"></script>
+       	<script src="src/plugins/leaflet.ajax.min.js"></script>	
         <script src="src/plugins/Leaflet.PolylineMeasure.js"></script>
         <script src="src/plugins/easy-button.js"></script>
         <script src="src/plugins/leaflet-providers.js"></script>
         <script src="src/plugins/leaflet-opencage/src/js/L.Control.OpenCageSearch.js"></script>
         <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
         <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleForms.js"></script>
-        <script src="src/plugins/leaflet.ajax.min.js"></script>
         
 <!--    ***************  Begin Leaflet.Draw-->
         
@@ -64,7 +64,7 @@
         <script src="src/plugins/leaflet-draw/edit/handler/Edit.Circle.js"></script>
         <script src="src/plugins/leaflet-draw/edit/handler/Edit.Rectangle.js"></script>
         <script src="src/plugins/leaflet-draw/edit/handler/Edit.Marker.js"></script>
-        
+        <script src="src/POLICE_STATIONS.geojson"></script>
         
         <script src="https:api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
         <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
@@ -109,6 +109,7 @@
             var lyrSales;
             var lyrCommunities;
             var lyrDiego;
+            var lyrStations;
             var mrkCurrentLocation;
             var mrkTTT;
             var plnBikeRoute;
@@ -140,7 +141,7 @@
                 lyrWatercolor = L.tileLayer.provider('Stamen.Watercolor');
                 mymap.addLayer(lyrOSM);
                 
-                //lyrDiego = L.imageOverlay('img/Diego.png',[[10.70445, -61.55688],[10.69946,-61.54912]], {opacity:0.75}).addTo(mymap);//
+                lyrDiego = L.imageOverlay('img/Diego.png',[[10.70445, -61.55688],[10.69946,-61.54912]], {opacity:0.75}).addTo(mymap);
                 
                 objBasemaps = {
                     "Open Street Maps": lyrOSM,
@@ -150,7 +151,7 @@
                     "Watercolor":lyrWatercolor
                 };
                 
-                mrkTTT = L.marker([10.66569, -61.51936], {draggable: true});
+                mrkTTT = L.marker([10.66569, -61.51936], {draggable: false});
                 mrkTTT.bindTooltip("Trinidad & Tobago Television");
                 
                 plnBikeRoute = L.polyline([[10.66583, -61.5191],[10.66567, -61.51645],[10.66673, -61.51642]], {color:'red'});
@@ -161,21 +162,16 @@
                 fgpDrawnItems = new L.FeatureGroup();
                 fgpDrawnItems.addTo(mymap);
                 
-                fetch("src/Sales.geojson")
-                        .then(function(response) {
-                return response.json();
-                                        })
-                        .then(function(data) {
-                            L.geoJSON(data).addTo(mymap);
-                });
-                
+                lyrSales = L.geoJSON.ajax('src/Sales.geojson').addTo(mymap);
                 lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
+                lyrStations = L.geoJSON.ajax('/src/POLICE_STATIONS.geojson').addTo(mymap);
                 
                 
                 objOverlays = {
                     "Dickson Drive":lyrDiego,
                     "Sales":lyrSales,
                     "Communities":lyrCommunities,
+                    "Police Stations":lyrStations,
                     "Diego Vectors":fgpDiego    
                 };
                 
