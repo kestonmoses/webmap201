@@ -164,7 +164,7 @@
                 
                 lyrSales = L.geoJSON.ajax('src/Sales.geojson').addTo(mymap);
                 lyrCommunities = L.geoJSON.ajax('src/Communities.geojson').addTo(mymap);
-                lyrStations = L.geoJSON.ajax('/src/POLICE_STATIONS.geojson').addTo(mymap);
+                lyrStations = L.geoJSON.ajax('/src/POLICE_STATIONS.geojson', {pointToLayer:returnPoliceMarker}).addTo(mymap);
                 
                 
                 objOverlays = {
@@ -313,7 +313,16 @@
 			function LatLngToArrayString(ll) {
 //                console.log(ll);
                 return "["+ll.lat.toFixed(5)+", "+ll.lng.toFixed(5)+"]";																		  
-            }		 
+            }
+            
+            
+            function returnPoliceMarker(json, latlng){
+                var att = json.properties;
+                
+                return L.circle(latlng).bindPopup(att.FondID + "<br>Police: " + att.Demand);
+
+            }
+            
         </script>
     </body>
 </html>
